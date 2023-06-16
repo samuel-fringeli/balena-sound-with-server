@@ -64,6 +64,14 @@ services:
     volumes:
       - spotifycache:/var/cache/raspotify
 
+  cestenormeserver:
+    image: samuelfringeli/cestenormeserver
+    restart: on-failure
+    network_mode: host
+    privileged: true
+    ports:
+      - 3000:3000
+
   # https://github.com/balenablocks/hostname
   hostname:
     build: ./core/hostname
