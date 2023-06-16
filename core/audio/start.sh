@@ -9,7 +9,7 @@ CONFIG_FILE=/etc/pulse/default.pa.d/01-balenasound.pa
 function set_loopback_latency() {
   local LOOPBACK="$1"
   local LATENCY="$2"
-  
+
   sed -i "s/%$LOOPBACK%/$LATENCY/" "$CONFIG_FILE"
 }
 
@@ -67,7 +67,7 @@ function route_output_sink() {
 function reset_sound_config() {
   if [[ -f "$CONFIG_FILE" ]]; then
     rm "$CONFIG_FILE"
-  fi 
+  fi
   cp "$CONFIG_TEMPLATE" "$CONFIG_FILE"
 }
 
@@ -76,7 +76,7 @@ SOUND_SUPERVISOR="$(ip route | awk '/default / { print $3 }'):$SOUND_SUPERVISOR_
 # Wait for sound supervisor to start
 while ! curl --silent --output /dev/null "$SOUND_SUPERVISOR/ping"; do sleep 5; echo "Waiting for sound supervisor to start at $SOUND_SUPERVISOR"; done
 
-# Get mode from sound supervisor. 
+# Get mode from sound supervisor.
 # mode: default to MULTI_ROOM
 MODE=$(curl --silent "$SOUND_SUPERVISOR/mode" || true)
 
@@ -91,8 +91,8 @@ route_input_sink "$MODE"
 route_output_sink
 set_loopback_latency "INPUT_LATENCY" "$SOUND_INPUT_LATENCY"
 set_loopback_latency "OUTPUT_LATENCY" "$SOUND_OUPUT_LATENCY"
-if [[ -n "$SOUND_ENABLE_SOUNDCARD_INPUT" ]]; then
-  route_input_source
-fi
+#if [[ -n "$SOUND_ENABLE_SOUNDCARD_INPUT" ]]; then
+route_input_source
+#fi
 
 exec pulseaudio

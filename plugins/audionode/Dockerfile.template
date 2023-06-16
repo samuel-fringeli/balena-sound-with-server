@@ -1,0 +1,18 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian
+WORKDIR /usr/src
+
+ENV PULSE_SERVER=tcp:localhost:4317
+ENV PULSE_SINK=balena-sound.output
+
+RUN install_packages mplayer
+RUN apt-get update
+RUN apt-get install -y nodejs npm
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 3000
+
+# To play the file: mplayer test.wav
+CMD [ "node", "server.js" ]
